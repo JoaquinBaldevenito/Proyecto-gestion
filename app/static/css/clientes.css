@@ -93,6 +93,15 @@ form input:focus {
     background-color: rgba(255, 255, 255, 0.2); /* Destacar el item activo */
 }
 
+.editable-cell {
+    width: 50%;
+    padding: 5px;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border;
+    background-color: rgba(255, 255, 255, 0.34)
+}
+
 .dashboard {
     display: grid;
     grid-template-columns: 1fr 1fr;

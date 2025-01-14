@@ -38,3 +38,33 @@ def add_cliente():
     }
     
     return jsonify(new_cliente), 201
+
+
+@bp.route('/update_cliente', methods=['POST'])
+def update_cliente():
+    try:
+        # Obtener datos de la solicitud
+        data = request.json
+        id_cliente = data.get('id_cliente')
+        field = data.get('field')
+        value = data.get('value')
+
+        if not id_cliente or not field or value is None:
+            return jsonify({"error": "Faltan datos requeridos"}), 400
+
+        # Verificar si el cliente existe
+        cliente = Cliente.query.get(id_cliente)
+        if not cliente:
+            return jsonify({"error": "Cliente no encontrado"}), 404
+
+        # Actualizar el campo dinámicamente
+        if hasattr(cliente, field):
+            setattr(cliente, field, value)
+            db.session.commit()
+            return jsonify({"success": True, "message": "Cliente actualizado correctamente"})
+        else:
+            return jsonify({"error": f"Campo '{field}' no válido"}), 400
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": "Error interno del servidor"}), 500

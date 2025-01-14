@@ -94,8 +94,8 @@
     document.getElementById('add-client-form').onsubmit = async function (e) {
         e.preventDefault();
         const nombre_cliente = document.getElementById('nombre_cliente').value;
-        const telefono_cliente = document.getElementById('telefono_cliente').value || '-';  // Si no hay teléfono, usar guion
-        const direccion_cliente = document.getElementById('direccion_cliente').value || '-';  // Si no hay dirección, usar guion
+        const telefono_cliente = document.getElementById('telefono_cliente').value || '-';  
+        const direccion_cliente = document.getElementById('direccion_cliente').value || '-';  
     
         try {
             const response = await fetch('{{ url_for("main.add_cliente") }}', {
@@ -115,6 +115,7 @@
                     <td>${newCliente.direccion_cliente || '-'}</td>
                 `;
                 tbody.appendChild(row);
+                attachEditableCells(row); // Hacer celdas editables
                 modal.style.display = 'none';
             } else {
                 alert('Error al agregar el cliente.');
@@ -123,7 +124,57 @@
             console.error(error);
         }
     };
-    
-    
+
+    // Convertir celdas en editables
+    function attachEditableCells(row) {
+        const cells = row.querySelectorAll('td:not(:first-child)'); // Evitar ID (primer columna)
+        cells.forEach(cell => {
+            cell.addEventListener('dblclick', () => {
+                const originalText = cell.textContent.trim();
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = originalText;
+                input.classList.add('editable-cell');
+                
+                cell.textContent = ''; // Limpiar contenido original
+                cell.appendChild(input);
+                input.focus();
+
+                // Guardar cambio al perder el foco
+                input.addEventListener('blur', async () => {
+                    const newValue = input.value.trim();
+                    cell.textContent = newValue || originalText; // Mantener valor anterior si está vacío
+                    
+                    // Lógica para actualizar en el servidor (opcional)
+                    try {
+                        const id_cliente = row.querySelector('td:first-child').textContent.trim();
+                        const fieldName = cell.cellIndex === 1 
+                            ? 'nombre_cliente' 
+                            : (cell.cellIndex === 2 ? 'telefono_cliente' : 'direccion_cliente');
+
+                        await fetch('{{ url_for("main.update_cliente") }}', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ id_cliente, field: fieldName, value: newValue }),
+                        });
+                    } catch (error) {
+                        console.error('Error al actualizar el servidor:', error);
+                        cell.textContent = originalText; // Revertir cambios si hay error
+                    }
+                });
+
+                // Guardar cambio al presionar Enter
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        input.blur();
+                    }
+                });
+            });
+        });
+    }
+
+    // Hacer todas las celdas existentes editables
+    document.querySelectorAll('#clientes-list tr').forEach(attachEditableCells);
 </script>
+
 {% endblock %}
