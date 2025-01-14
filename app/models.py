@@ -4,6 +4,8 @@ class Cliente(db.Model):
     __tablename__ = 'clientes'
     id_cliente = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nombre_cliente = db.Column(db.String(255), nullable=False)
+    telefono_cliente = db.Column(db.String(255), nullable=True)
+    direccion_cliente = db.Column(db.String(255), nullable=True)
 
 class Transaccion(db.Model):
     __tablename__ = 'transacciones'
