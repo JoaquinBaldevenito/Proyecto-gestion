@@ -1,0 +1,9 @@
+camaras(VENTAS O PROVEEDOR, CLIENTE, FECHA, DOLARES, INGRESO CHEQUE, ING EFECTIVO N, ING EFECTIVO F, INGRESO TARJETA, GASTO TARJETA, INGRESO TRANSF,EGRESO)
+insumos(VENTAS O PROVEEDOR, CLIENTE, FECHA, INGRESO CHEQUE, ING EFECTIVO N, ING EFECTIVO F, INGRESO TARJETA, GASTO TARJETA, INGRESO TRANSF,EGRESO)
+comodatos(CLIENTE,FECHA, INGRESO CHEQUE, EFECTIVO, FACTURA, TRANSF N, TRANSF F, EGRESO )
+gastosFijos(descripcion,fecha,egreso cheque, egreso efectivo)
+gastoscasa(descripcion,tipo,fecha,importe)
+deudores(cliente, n factura/presupuesto, fecha, importe, fecha de pago, entrega, retenciones, total) pueden ser muchas fechas de pago y entregas
+tacataca(cliente,n factura, fecha, venta, porcentaje, comision, importe, comision devuelta, total parcial, retenciones SIRTAC, retencion IVA, retencion ganancias, promo comision,total, tarjeta, cuotas, fecha pago, rendimiento, importe)
+clover(cliente,,n factura, fecha, venta, porcentaje, recargo, importe, arancel, iva 21%, promo en cuotas descuento, IIBB, iva promo cuotas 10.5%, perc IVA 3%, promo comision, total, tipo tarjeta, cuotas, fecha pago)
+cheques(FECHA ENTREGA, FECHA COBRO, CLIENTE, BANCO, Nª CHEQUE, IMPORTE, ENTREGADO A, IMPORTE, FECHA DEP)

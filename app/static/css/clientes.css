@@ -1,0 +1,86 @@
+@import url('base.css');
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+    border-radius: 8px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover, .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn {
+    background-color: #1a932e77;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+}
+
+.btn h {
+    color: #1A932E;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}
+
+/* Tabla */
+.table {
+    width: 100%;
+    border-collapse: collapse; /* Los bordes de las celdas se colapsan */
+    margin: 40px auto;
+    text-align: center;
+    border-radius: 14px; /* Redondear las esquinas de la tabla */
+    overflow: hidden;
+
+}
+
+.table th, .table td {
+    padding: 15px 20px;
+    text-align: center;
+}
+
+/* Fondo alterno para las filas */
+.table tr:nth-child(odd) {
+    background-color: rgba(255, 255, 255, 0.34); /* Opacidad para las filas impares */
+}
+
+.table tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.34); /* Opacidad para las filas pares */
+}
+
+/* Encabezado */
+.table th {
+}
+
+/* Clase activa para elementos */
+.active {
+    background-color: rgba(255, 255, 255, 0.2); /* Destacar el item activo */
+}

@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Clientes{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/clientes.css') }}">
+{% endblock %}
+
+{% block header %} Clientes {% endblock %}
+
+{% block top %}
+
+<div class="top-controls">
+    <button id="add-client-btn" class="btn">
+        <i class="fa-solid fa-user-plus"></i>
+    </button>
+
+</div>
+
+<!-- Modal -->
+<div id="add-client-modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Agregar Cliente</h2>
+        <form id="add-client-form">
+            <label for="nombre_cliente">Nombre del Cliente:</label>
+            <input type="text" id="nombre_cliente" name="nombre_cliente" required>
+            <button type="submit" class="btn">Guardar</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block content %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre del Cliente</th>
+        </tr>
+    </thead>
+    <tbody id="clientes-list">
+        {% for cliente in clientes %}
+        <tr>
+            <td>{{ cliente.id_cliente }}</td>
+            <td>{{ cliente.nombre_cliente }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    // Modal Handling
+    const modal = document.getElementById('add-client-modal');
+    const btn = document.getElementById('add-client-btn');
+    const closeBtn = document.querySelector('.close');
+
+    btn.onclick = () => modal.style.display = 'block';
+    closeBtn.onclick = () => modal.style.display = 'none';
+    window.onclick = (e) => { if (e.target == modal) modal.style.display = 'none'; };
+
+    // Form Submission
+    document.getElementById('add-client-form').onsubmit = async function (e) {
+        e.preventDefault();
+        const nombre_cliente = document.getElementById('nombre_cliente').value;
+
+        try {
+            const response = await fetch('{{ url_for("main.add_cliente") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nombre_cliente }),
+            });
+
+            if (response.ok) {
+                const newCliente = await response.json();
+                const tbody = document.getElementById('clientes-list');
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${newCliente.id_cliente}</td><td>${newCliente.nombre_cliente}</td>`;
+                tbody.appendChild(row);
+                modal.style.display = 'none';
+            } else {
+                alert('Error al agregar el cliente.');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+</script>
+{% endblock %}
