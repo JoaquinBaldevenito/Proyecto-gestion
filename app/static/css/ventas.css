@@ -1,0 +1,164 @@
+@import url('base.css');
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 60px; /* Espacio desde la parte superior */
+    transition: opacity 0.3s ease; /* Animación para suavizar la aparición */
+}
+
+/* Modal content */
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto; /* Centrado con márgenes */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Ancho del modal */
+    max-width: 600px; /* Máximo ancho */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+/* El botón de cierre (X) */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Estilos para el formulario */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+form input {
+    padding: 4px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+form input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.btn {
+    background-color: #1a932e77;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    position: relative;
+    top: -5px;
+}
+
+.btn h {
+    color: #1A932E;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}
+
+/* Clase activa para elementos */
+.active {
+    background-color: rgba(255, 255, 255, 0.2); /* Destacar el item activo */
+}
+
+.editable-cell {
+    width: 50%;
+    padding: 5px;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border;
+    background-color: rgba(255, 255, 255, 0.34)
+}
+
+.dashboard {
+    display: grid;
+    
+    gap: 20px;
+    margin: 20px;
+  }
+  
+  .top-controls {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .table-container {
+    max-height: 250px; /* Ajusta según el tamaño de las filas */
+    overflow-y: auto; /* Habilita el scroll vertical */
+    border: 1px solid #ccc; /* Opcional: para destacar el contenedor */
+    
+    border-radius: 5px;
+  }
+
+  .summary-box {
+    grid-column: 0 / -1; /* Ocupa todo el ancho */
+    background: rgba(255, 255, 255, 0.34);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .summary-box table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .summary-box tbody{
+    overflow: auto;
+  }
+
+  .summary-box table th, 
+  .summary-box table td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .summary-box thead {
+    position: sticky;
+    top: 0;
+    background-color: #70A1E5;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .overall-progress, 
+  .projects-workload, 
+  .details-box {
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  

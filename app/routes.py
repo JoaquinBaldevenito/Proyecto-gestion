@@ -1,6 +1,7 @@
+from datetime import datetime
 from flask import Blueprint, app, jsonify, render_template, request
 
-from app.models import Cliente, db
+from app.models import Cliente, Transaccion, db
 
 bp = Blueprint('main', __name__)
 
@@ -68,3 +69,87 @@ def update_cliente():
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": "Error interno del servidor"}), 500
+    
+@bp.route('/ventas')
+def ventas():
+    transacciones = Transaccion.query.all()
+    return render_template('ventas.html', transacciones=transacciones)
+
+
+@bp.route('/add_transaccion', methods=['POST'])
+def add_transaccion():
+
+    data = request.get_json()
+    id_cliente=data.get('id_cliente')
+    tipo_transaccion=data.get('tipo_transaccion')
+    tipo_producto=data.get('tipo_producto')
+    fecha_transaccion=datetime.strptime(data.get('fecha_transaccion'), '%Y-%m-%d')
+    dolares=data.get('dolares')
+    ingreso_cheque=data.get('ingreso_cheque')
+    ing_efectivo_n=data.get('ing_efectivo_n')
+    ing_efectivo_f=data.get('ing_efectivo_f')
+    ingreso_tarjeta=data.get('ingreso_tarjeta')
+    gasto_tarjeta=data.get('gasto_tarjeta')
+    ingreso_transf=data.get('ingreso_transf')
+    egreso=data.get('egreso')
+    
+    nueva_transaccion = Transaccion(
+        id_cliente=id_cliente, 
+        tipo_transaccion=tipo_transaccion,
+        tipo_producto=tipo_producto,
+        fecha_transaccion=fecha_transaccion,
+        dolares=dolares,
+        ingreso_cheque=ingreso_cheque,
+        ing_efectivo_n=ing_efectivo_n,
+        ing_efectivo_f=ing_efectivo_f,
+        ingreso_tarjeta=ingreso_tarjeta,
+        gasto_tarjeta=gasto_tarjeta,
+        ingreso_transf=ingreso_transf,
+        egreso=egreso
+        )
+    
+    db.session.add(nueva_transaccion)
+    db.session.commit()
+    
+    return jsonify({
+        'id_transaccion': nueva_transaccion.id_transaccion,
+        'id_cliente': nueva_transaccion.id_cliente,
+        'tipo_transaccion': nueva_transaccion.tipo_transaccion,
+        'tipo_producto': nueva_transaccion.tipo_producto,
+        'fecha_transaccion': nueva_transaccion.fecha_transaccion.strftime('%Y-%m-%d'),
+        'dolares': nueva_transaccion.dolares,
+        'ingreso_cheque': nueva_transaccion.ingreso_cheque,
+        'ing_efectivo_n': nueva_transaccion.ing_efectivo_n,
+        'ing_efectivo_f': nueva_transaccion.ing_efectivo_f,
+        'ingreso_tarjeta': nueva_transaccion.ingreso_tarjeta,
+        'gasto_tarjeta': nueva_transaccion.gasto_tarjeta,
+        'ingreso_transf': nueva_transaccion.ingreso_transf,
+        'egreso': nueva_transaccion.egreso,
+    }), 201
+    
+@bp.route('/update_transaccion', methods=['POST'])
+def update_transaccion():
+    try:
+        data = request.json
+        id_transaccion = data['id_transaccion']
+        field = data['field']
+        value = data['value']
+
+        # Encontrar la transacción por ID
+        transaccion = Transaccion.query.get(id_transaccion)
+        if not transaccion:
+            return jsonify({'error': 'Transacción no encontrada'}), 404
+
+        # Actualizar el campo específico
+        if field in ['dolares', 'ingreso_cheque', 'ing_efectivo_n', 'ing_efectivo_f', 
+                     'ingreso_tarjeta', 'gasto_tarjeta', 'ingreso_transf', 'egreso']:
+            setattr(transaccion, field, float(value) if value else None)
+        elif field == 'fecha_transaccion':
+            transaccion.fecha_transaccion = datetime.strptime(value, '%Y-%m-%d')
+        else:
+            setattr(transaccion, field, value)
+
+        db.session.commit()
+        return jsonify({'message': 'Transacción actualizada con éxito'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400

@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block title %}Clientes{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ventas.css') }}">
+{% endblock %}
+
+{% block header %} Ventas {% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- Fila 1: Encabezado -->
+    <div class="summary-box">
+        <div class="top-controls">
+            <h3>Listado de Transacciones</h3>
+            <button id="add-transaccion-btn" class="btn">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+        </div>
+        <!-- Modal -->
+        <div id="add-transaccion-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Agregar Transacción</h2>
+                <form id="add-transaccion-form">
+                    <label for="id_cliente">ID del Cliente:</label>
+                    <input type="number" id="id_cliente" name="id_cliente" required>
+    
+                    <label for="tipo_transaccion">Tipo de Transacción:</label>
+                    <select id="tipo_transaccion" name="tipo_transaccion" required>
+                        <option value="VENTA">Venta</option>
+                        <option value="COMPRA">Compra</option>
+                    </select>
+    
+                    <label for="tipo_producto">Tipo de Producto:</label>
+                    <select id="tipo_producto" name="tipo_producto" required>
+                        <option value="CAMARAS">Cámaras</option>
+                        <option value="INSUMOS">Insumos</option>
+                        <option value="COMODATOS">Comodatos</option>
+                    </select>
+    
+                    <label for="fecha_transaccion">Fecha de Transacción:</label>
+                    <input type="date" id="fecha_transaccion" name="fecha_transaccion" required>
+    
+                    <label for="dolares">Dólares (Opcional):</label>
+                    <input type="number" step="0.01" id="dolares" name="dolares">
+    
+                    <h3>Detalles de Pago (Solo para Venta):</h3>
+                    <label for="ingreso_cheque">Ingreso Cheque (Opcional):</label>
+                    <input type="number" step="0.01" id="ingreso_cheque" name="ingreso_cheque">
+    
+                    <label for="ing_efectivo_n">Ingreso Efectivo Nacional (Opcional):</label>
+                    <input type="number" step="0.01" id="ing_efectivo_n" name="ing_efectivo_n">
+    
+                    <label for="ing_efectivo_f">Ingreso Efectivo Extranjero (Opcional):</label>
+                    <input type="number" step="0.01" id="ing_efectivo_f" name="ing_efectivo_f">
+    
+                    <label for="ingreso_tarjeta">Ingreso Tarjeta (Opcional):</label>
+                    <input type="number" step="0.01" id="ingreso_tarjeta" name="ingreso_tarjeta">
+    
+                    <label for="gasto_tarjeta">Gasto Tarjeta (Opcional):</label>
+                    <input type="number" step="0.01" id="gasto_tarjeta" name="gasto_tarjeta">
+    
+                    <label for="ingreso_transf">Ingreso Transferencia (Opcional):</label>
+                    <input type="number" step="0.01" id="ingreso_transf" name="ingreso_transf">
+    
+                    <h3>Detalles de Egreso (Solo para Compra):</h3>
+                    <label for="egreso">Egreso (Opcional):</label>
+                    <input type="number" step="0.01" id="egreso" name="egreso">
+    
+                    <button type="submit" class="btn">Guardar</button>
+                </form>
+            </div>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>ID Cliente</th>
+                        <th>Tipo Transacción</th>
+                        <th>Tipo Producto</th>
+                        <th>Fecha</th>
+                        <th>Dólares</th>
+                        <th>Ingreso Cheque</th>
+                        <th>Ingreso Efectivo Nacional</th>
+                        <th>Ingreso Efectivo Extranjero</th>
+                        <th>Ingreso Tarjeta</th>
+                        <th>Gasto Tarjeta</th>
+                        <th>Ingreso Transferencia</th>
+                        <th>Egreso</th>
+                    </tr>
+                </thead>
+    
+              <tbody id="transacciones-list">
+                {% for transaccion in transacciones %}
+                <tr>
+                    <td>{{ transaccion.id_transaccion }}</td>
+                    <td>{{ transaccion.id_cliente }}</td>
+                    <td>{{ transaccion.tipo_transaccion }}</td>
+                    <td>{{ transaccion.tipo_producto }}</td>
+                    <td>{{ transaccion.fecha_transaccion }}</td>
+                    <td>{{ transaccion.dolares or '-' }}</td>
+                    <td>{{ transaccion.ingreso_cheque or '-' }}</td>
+                    <td>{{ transaccion.ing_efectivo_n or '-' }}</td>
+                    <td>{{ transaccion.ing_efectivo_f or '-' }}</td>
+                    <td>{{ transaccion.ingreso_tarjeta or '-' }}</td>
+                    <td>{{ transaccion.gasto_tarjeta or '-' }}</td>
+                    <td>{{ transaccion.ingreso_transf or '-' }}</td>
+                    <td>{{ transaccion.egreso or '-' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            
+            </table>
+        </div>
+    </div>
+  
+    <!-- Fila 2: Progreso general y carga de proyectos -->
+    <div class="overall-progress">
+      <h3>Overall Progress</h3>
+    </div>
+    <div class="projects-workload">
+      <h3>Projects Workload</h3>
+    </div>
+    <!-- Fila 3: Detalles -->
+    <div class="details-box">
+      <h3>All</h3>
+    </div>
+  </div>
+  
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Modal Handling
+    const modal = document.getElementById('add-transaccion-modal');
+    const btn = document.getElementById('add-transaccion-btn');
+    const closeBtn = document.querySelector('.close');
+
+    btn.onclick = () => modal.style.display = 'block';
+    closeBtn.onclick = () => modal.style.display = 'none';
+    window.onclick = (e) => { if (e.target == modal) modal.style.display = 'none'; };
+
+    // Form Submission
+    document.getElementById('add-transaccion-form').onsubmit = async function (e) {
+        e.preventDefault();
+        const id_cliente = document.getElementById('id_cliente').value;
+        const tipo_transaccion = document.getElementById('tipo_transaccion').value;
+        const tipo_producto = document.getElementById('tipo_producto').value;
+        const fecha_transaccion = document.getElementById('fecha_transaccion').value;
+        const dolares = document.getElementById('dolares').value || null;
+        const ingreso_cheque = document.getElementById('ingreso_cheque').value || null;
+        const ing_efectivo_n = document.getElementById('ing_efectivo_n').value || null;
+        const ing_efectivo_f = document.getElementById('ing_efectivo_f').value || null;
+        const ingreso_tarjeta = document.getElementById('ingreso_tarjeta').value || null;
+        const gasto_tarjeta = document.getElementById('gasto_tarjeta').value || null;
+        const ingreso_transf = document.getElementById('ingreso_transf').value || null;
+        const egreso = document.getElementById('egreso').value || null;
+
+        try {
+            const response = await fetch('{{ url_for("main.add_transaccion") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    id_cliente, tipo_transaccion, tipo_producto, fecha_transaccion, dolares,
+                    ingreso_cheque, ing_efectivo_n, ing_efectivo_f, ingreso_tarjeta,
+                    gasto_tarjeta, ingreso_transf, egreso
+                }),
+            });
+
+            if (response.ok) {
+                const newTransaccion = await response.json();
+                const tbody = document.getElementById('transacciones-list');
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${newTransaccion.id_transaccion}</td>
+                    <td>${newTransaccion.id_cliente}</td>
+                    <td>${newTransaccion.tipo_transaccion}</td>
+                    <td>${newTransaccion.tipo_producto}</td>
+                    <td>${newTransaccion.fecha_transaccion}</td>
+                    <td>${newTransaccion.dolares || '-'}</td>
+                    <td>${newTransaccion.ingreso_cheque || '-'}</td>
+                    <td>${newTransaccion.ing_efectivo_n || '-'}</td>
+                    <td>${newTransaccion.ing_efectivo_f || '-'}</td>
+                    <td>${newTransaccion.ingreso_tarjeta || '-'}</td>
+                    <td>${newTransaccion.gasto_tarjeta || '-'}</td>
+                    <td>${newTransaccion.ingreso_transf || '-'}</td>
+                    <td>${newTransaccion.egreso || '-'}</td>
+                `;
+                tbody.appendChild(row);
+                attachEditableCells(row); // Hacer celdas editables
+                modal.style.display = 'none';
+            } else {
+                alert('Error al agregar la transacción.');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    // Convertir celdas en editables
+    function attachEditableCells(row) {
+        const cells = row.querySelectorAll('td:not(:first-child)'); // Evitar ID de transacción (primer columna)
+        cells.forEach(cell => {
+            cell.addEventListener('dblclick', () => {
+                const originalText = cell.textContent.trim();
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = originalText;
+                input.classList.add('editable-cell');
+                
+                cell.textContent = ''; // Limpiar contenido original
+                cell.appendChild(input);
+                input.focus();
+
+                // Guardar cambio al perder el foco
+                input.addEventListener('blur', async () => {
+                    const newValue = input.value.trim();
+                    cell.textContent = newValue || originalText; // Mantener valor anterior si está vacío
+                    
+                    // Lógica para actualizar en el servidor (opcional)
+                    try {
+                        const id_transaccion = row.querySelector('td:first-child').textContent.trim();
+                        const fieldName = [
+                            'id_cliente', 'tipo_transaccion', 'tipo_producto', 'fecha_transaccion',
+                            'dolares', 'ingreso_cheque', 'ing_efectivo_n', 'ing_efectivo_f',
+                            'ingreso_tarjeta', 'gasto_tarjeta', 'ingreso_transf', 'egreso'
+                        ][cell.cellIndex - 1]; // Determinar el campo según la posición
+
+                        await fetch('{{ url_for("main.update_transaccion") }}', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ id_transaccion, field: fieldName, value: newValue }),
+                        });
+                    } catch (error) {
+                        console.error('Error al actualizar el servidor:', error);
+                        cell.textContent = originalText; // Revertir cambios si hay error
+                    }
+                });
+
+                // Guardar cambio al presionar Enter
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        input.blur();
+                    }
+                });
+            });
+        });
+    }
+
+    // Hacer todas las celdas existentes editables
+    document.querySelectorAll('#transacciones-list tr').forEach(attachEditableCells);
+</script>
+{% endblock %}
