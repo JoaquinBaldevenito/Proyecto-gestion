@@ -19,6 +19,9 @@
     <div class="summary-box">
         <div class="top-controls">
             <h3>Listado de Cliente</h3>
+            <div class="search-bar-clientes">
+                <input id="searchbar-cliente" type="text" placeholder="Buscar...">
+            </div>
             <button id="add-client-btn" class="btn">
                 <i class="fa-solid fa-user-plus"></i>
             </button>
@@ -175,6 +178,25 @@
 
     // Hacer todas las celdas existentes editables
     document.querySelectorAll('#clientes-list tr').forEach(attachEditableCells);
+
+    document.getElementById('searchbar-cliente').addEventListener('input', function () {
+        const query = this.value;
+        fetch(`/search?query=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.querySelector('table tbody');
+                tbody.innerHTML = '';
+                data.forEach(cliente => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${cliente.id_cliente}</td>
+                            <td>${cliente.nombre_cliente}</td>
+                            <td>${cliente.telefono_cliente || '-'}</td>
+                            <td>${cliente.direccion_cliente || '-'}</td>
+                        </tr>`;
+                });
+            });
+    });
 </script>
 
 {% endblock %}

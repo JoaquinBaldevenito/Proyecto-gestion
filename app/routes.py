@@ -70,6 +70,22 @@ def update_cliente():
         print(f"Error: {e}")
         return jsonify({"error": "Error interno del servidor"}), 500
     
+@bp.route('/search', methods=['GET'])
+def search():
+    query = request.args.get('query', '').lower()
+    # Ejecutar la consulta para obtener los clientes
+    clientes = Cliente.query.all()  # Asegúrate de que esto devuelva una lista
+    # Filtrar los clientes
+    filtered_clients = [c for c in clientes if query in c.nombre_cliente.lower()]
+    # Convertir a JSON para enviar al front-end
+    return jsonify([{
+        'id_cliente': c.id_cliente,
+        'nombre_cliente': c.nombre_cliente,
+        'telefono_cliente': c.telefono_cliente,
+        'direccion_cliente': c.direccion_cliente
+    } for c in filtered_clients])
+
+    
 @bp.route('/ventas')
 def ventas():
     transacciones = Transaccion.query.all()

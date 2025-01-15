@@ -20,11 +20,8 @@
             <li><a href="{{ url_for('main.base') }}" class="{% if request.path == '/' %} active{% endif %}"><i class="fas fa-home"></i> Inicio</a></li>
             <li><a href="{{ url_for('main.ventas') }}" class="{% if request.path == '/ventas' %} active{% endif %}"><i class="fas fa-chart-line"></i> Ventas</a></li>
             <li><a href="{{ url_for('main.base') }}" class="{% if request.path == '/a' %} active{% endif %}"><i class="fas fa-box"></i> Compras</a></li>
-            <li><a href="{{ url_for('main.base') }}" class="{% if request.path == '/a' %} active{% endif %}"><i class="fas fa-camera"></i> Cámaras</a></li>
-            <li><a href="{{ url_for('main.base') }}" class="{% if request.path == '/a' %} active{% endif %}"><i class="fas fa-cogs"></i> Insumos</a></li>
-            <li><a href="{{ url_for('main.base') }}" class="{% if request.path == '/a' %} active{% endif %}"><i class="fas fa-cogs"></i> Comodatos</a></li>
+            <li><a href="{{ url_for('main.base') }}" class="{% if request.path == '/a' %} active{% endif %}"><i class="fas fa-tag"></i> Pagos</a></li>
             <li><a href="{{ url_for('main.clientes') }}" class="{% if request.path == '/clientes' %} active{% endif %}"><i class="fas fa-users"></i> Clientes</a></li>
-            <li><a href="{{ url_for('main.base') }}" class="{% if request.path == '/a' %} active{% endif %}"><i class="fas fa-cogs"></i> Ajustes</a></li>
         </ul>
         
     </div>
